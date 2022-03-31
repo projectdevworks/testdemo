@@ -1,7 +1,12 @@
-# testdemo
-## testdemo
-###### testdemo
 
+**edd-amazon-s3**
+
+1. `web/app/plugins/edd-amazon-s3/class-edd-amazon-s3.php`
+
+- modified `get_s3_url()` function.
+- Added header
+  - `'ResponseContentDisposition' => 'attachment'`
+- purpose : force donwload links to proceed downloadind instead of playing or previewing files
 
 ```
 if ( class_exists( '\\Aws\\S3\\S3MultiRegionClient' ) ) {
