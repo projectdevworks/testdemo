@@ -40,14 +40,14 @@ if ( class_exists( '\\Aws\\S3\\S3MultiRegionClient' ) ) {
 ```
 public function getObjectUrl($bucket, $key)
 {
-$command = $this->getCommand('GetObject', [
-    'Bucket' => $bucket,
-    'Key'    => $key,
-    'ResponseContentType'=> 'binary/octet-stream',
-    'ResponseContentDisposition' => 'attachment' 
-]);
+	$command = $this->getCommand('GetObject', [
+	    'Bucket' => $bucket,
+	    'Key'    => $key,
+	    'ResponseContentType'=> 'binary/octet-stream',
+	    'ResponseContentDisposition' => 'attachment' 
+	]);
 
-return (string) \Aws\serialize($command)->getUri();
+	return (string) \Aws\serialize($command)->getUri();
 }
 
 ```
