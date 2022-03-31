@@ -1,3 +1,4 @@
+**edd-amazon-s3**
 
 1. `web/app/plugins/edd-amazon-s3/class-edd-amazon-s3.php`
 
@@ -6,6 +7,7 @@
   - `'ResponseContentType'=> 'binary/octet-stream',`
   - `'ResponseContentDisposition' => 'attachment'`
 - purpose : force donwload links to proceed downloadind instead of playing or previewing files
+
 
 ```
 if ( class_exists( '\\Aws\\S3\\S3MultiRegionClient' ) ) {
@@ -24,7 +26,3 @@ if ( class_exists( '\\Aws\\S3\\S3MultiRegionClient' ) ) {
 } else {
 	return $this->s3->getObjectUrl( $bucket, $filename, '+10 minutes' );
 }
-```
-
-
-
