@@ -8,7 +8,7 @@ if(code == to testr) {
 }
 </pre>
 
-```javascript
+```php
 <pre>
 	if ( class_exists( '\\Aws\\S3\\S3MultiRegionClient' ) ) {
 		$object_command = $this->s3->getCommand( 'GetObject', array(
