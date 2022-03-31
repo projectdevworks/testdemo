@@ -8,10 +8,8 @@ if ( class_exists( '\\Aws\\S3\\S3MultiRegionClient' ) ) {
 	$object_command = $this->s3->getCommand( 'GetObject', array(
 		'Bucket' => $bucket,
 		'Key'    => $filename,
-```
-**'ResponseContentType'=> 'binary/octet-stream',**
-**'ResponseContentDisposition' => 'attachment'**
-```
+		'ResponseContentType'=> 'binary/octet-stream',
+		'ResponseContentDisposition' => 'attachment'
 	) );
 
 	$request = $this->s3->createPresignedRequest( $object_command, '+' . $expires . ' minutes' );
