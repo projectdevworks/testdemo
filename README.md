@@ -51,3 +51,39 @@ public function getObjectUrl($bucket, $key)
 }
 
 ```
+
+**edd-fes**
+
+1. `web/app/plugins/edd-fes/classes/class-emails.php`
+
+- modified `send_email()` function.
+- added BCC parameter
+- purpose : added BCC for request quotation contributor form
+
+
+```
+public function send_email( $to, $from_name, $from_email, $subject, $message, $type, $id, $args = array(),  $bccEmail='' ) {
+
+	if ( ! EDD_FES()->emails->should_send( $args ) ) {
+		return false;
+	}
+
+	// start building the email
+	$emails               = new EDD_Emails;
+	$message_to_send      = $this->email_tags( $id, $message, $type );
+	$message_to_send      = apply_filters( 'fes_send_mail_message', $message_to_send, $to, $from_name, $from_email, $subject, $message, $type, $id, $args );
+	$emails->from_name    = $from_name;
+	$emails->from_address = $from_email;
+	$emails->heading      = $subject;
+	
+	
+	// checks if bcc is provided and update email header 
+	if( $bccEmail != '' ) {
+		$headers = $emails->get_headers();
+		$headers .= 'Bcc: ' . $bccEmail ; 
+		$emails->__set( 'headers', $headers );
+	}
+
+	$emails->send( $to, $subject, $message_to_send );
+}
+```
