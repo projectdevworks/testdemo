@@ -195,4 +195,94 @@ $('.vendor-set-as-featured').on('change',function(){
 	});
 
 });
+
+```
+
+3. `web/app/plugins/edd-fes/classes/admin/vendors/vendors.php`
+
+- line : 264 -added setFeatured admin
+
+```
+$admin_actions['setFeatured'] = array(
+	'action' => 'setFeatured',
+	'name'   => __( 'Feature', 'edd_fes' ),
+	'label'  => __( 'Set contributor as featured', 'edd_fes' ),
+	'url'    => '#',
+);
+```
+- line : 301 modified foreach block to render a box for set contributor as featured
+
+```
+foreach ( $admin_actions as $action ) {
+	if($action['action'] == 'setFeatured') {
+		$user_meta = get_user_meta ( $user_id );
+		if($user_meta['featured'][0]){
+			$data .=   sprintF('<br><br><input type="checkbox" class="vendor-set-as-featured" data-vendor="%d"  data-nstatus="remove this contributor from being featured" checked /> Set as Featured Contributor',(int) esc_attr( $user_id ) );
+		}
+		else{
+			$data .=   sprintF('<br><br><input type="checkbox" class="vendor-set-as-featured" data-vendor="%d"  data-nstatus="%s"/> Set as Featured Contributor',(int) esc_attr( $user_id ),esc_attr( $action['name'] ));
+		}
+	}
+	else{
+		$data  .= sprintf( '<a class="button tips vendor-change-status" data-vendor="%d" data-status="%s" data-nstatus="%s" href="%s" data-tip="%s">%s</a>', (int) esc_attr( $user_id ), esc_attr( $action['action'] ), esc_attr( $action['name'] ), esc_url( $action['url'] ), esc_attr( $action['name'] ), esc_attr( $action['label'] ) );
+	}
+}
+```
+- line : 1242 - added add_action fes_set_vendor_as_featured to add or update user meta
+
+```
+/**
+ * FES set vendor as featured.
+ *
+ * set a vendor as featured.
+ *
+ * @param int    $id     Id of the user whose vendor account status is being changed.
+ * @param string $status featured Status to change vendor to.
+ *
+ * @return mixed If output is requested, a JSON encoded array with message.
+ */
+
+ function fes_set_vendor_as_featured() {
+
+	$output = array();
+
+	if ( ! EDD_FES()->vendors->user_is_admin() ) {
+		if ( $output ) {
+			$output                = array();
+			$output['title']       = __( 'Error!', 'edd_fes' );
+			$output['message']     = __( 'You don\'t have the permissions to do that!', 'edd_fes' );
+			$output['redirect_to'] = '#';
+			$output['success']     = false;
+			if ( fes_is_ajax_request() ) {
+				echo json_encode( $output );
+				exit;
+			} else {
+				return $output;
+			}
+		} else {
+			return;
+		}
+	}
+
+
+	update_user_meta( intval($_REQUEST['id']) , "featured", $_REQUEST['status'] === 'true' ? true : false);
+
+	$output['success']     = true;
+	$output['id'] = intval($_REQUEST['id']);
+	$output['isFeatured'] = $_REQUEST['status'] === 'true' ? true : false;
+	$output['title'] = __( 'Success!', 'edd_fes' );
+	$output['message']     = __( 'Successfully updated Contributor!', 'edd_fes' );
+	
+
+	if ( fes_is_ajax_request() ) {
+		echo json_encode( $output );
+		exit;
+	} else {
+		return $output;
+	}
+	
+}
+
+
+add_action( 'wp_ajax_fes_set_vendor_as_featured', 'fes_set_vendor_as_featured', 10, 3 );
 ```
